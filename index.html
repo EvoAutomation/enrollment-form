@@ -99,6 +99,14 @@
   .field input.error, .field select.error { border-color: #f87171; background: #fff5f5; }
   .req { color: #dc2626; }
   .req-note { font-size: 12px; color: #dc2626; font-weight: 500; }
+  .height-row { display: flex; gap: 8px; align-items: flex-end; }
+  .height-unit { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+  .height-unit label { font-size: 12px; color: #718096; font-weight: 500; }
+  .height-unit select { border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 11px 10px; font-size: 16px; color: #1a202c; background: #f7fafc; width: 100%; -webkit-appearance: none; appearance: none; font-family: inherit; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23718096' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; transition: border-color 0.2s; }
+  .height-unit select:focus { outline: none; border-color: #1a5fa8; background-color: #fff; }
+  .height-unit select.error { border-color: #f87171; background-color: #fff5f5; }
+  .height-preview { background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 10px; padding: 9px 10px; font-size: 13px; color: #1e40af; font-weight: 600; text-align: center; min-width: 72px; flex-shrink: 0; line-height: 1.3; }
+  .height-preview-lbl { font-size: 10px; color: #93c5fd; font-weight: 400; display: block; margin-bottom: 1px; }
 </style>
 </head>
 <body>
@@ -229,7 +237,35 @@
       <div class="info-box">Required for all applicants age 21+. Your answers are strictly confidential.</div>
       <div class="sec-label">Employee</div>
       <div class="row2">
-        <div class="field"><label>Height <span class="req">*</span></label><input type="text" id="employeeHeight" placeholder="5 ft 10 in"></div>
+        <div class="field">
+          <label>Height <span class="req">*</span></label>
+          <div class="height-row">
+            <div class="height-unit">
+              <label>Feet</label>
+              <select id="employeeHeightFt" onchange="updateHeightPreview('employee')">
+                <option value="">ft</option>
+                <option value="3">3 ft</option><option value="4">4 ft</option>
+                <option value="5">5 ft</option><option value="6">6 ft</option>
+                <option value="7">7 ft</option>
+              </select>
+            </div>
+            <div class="height-unit">
+              <label>Inches</label>
+              <select id="employeeHeightIn" onchange="updateHeightPreview('employee')">
+                <option value="">in</option>
+                <option value="0">0 in</option><option value="1">1 in</option>
+                <option value="2">2 in</option><option value="3">3 in</option>
+                <option value="4">4 in</option><option value="5">5 in</option>
+                <option value="6">6 in</option><option value="7">7 in</option>
+                <option value="8">8 in</option><option value="9">9 in</option>
+                <option value="10">10 in</option><option value="11">11 in</option>
+              </select>
+            </div>
+            <div class="height-preview" id="employeeHeightPreview">
+              <span class="height-preview-lbl">Preview</span>—
+            </div>
+          </div>
+        </div>
         <div class="field"><label>Weight <span class="req">*</span></label><input type="text" id="employeeWeight" placeholder="175 lbs"></div>
       </div>
       <div class="sec-label">Do you use tobacco? <span class="req">*</span></div>
@@ -240,7 +276,35 @@
       <div id="spouseHealthSection">
         <div class="sec-label" style="margin-top:4px">Spouse</div>
         <div class="row2">
-          <div class="field"><label>Height <span class="req">*</span></label><input type="text" id="spouseHeight" placeholder="5 ft 6 in"></div>
+          <div class="field">
+            <label>Height <span class="req">*</span></label>
+            <div class="height-row">
+              <div class="height-unit">
+                <label>Feet</label>
+                <select id="spouseHeightFt" onchange="updateHeightPreview('spouse')">
+                  <option value="">ft</option>
+                  <option value="3">3 ft</option><option value="4">4 ft</option>
+                  <option value="5">5 ft</option><option value="6">6 ft</option>
+                  <option value="7">7 ft</option>
+                </select>
+              </div>
+              <div class="height-unit">
+                <label>Inches</label>
+                <select id="spouseHeightIn" onchange="updateHeightPreview('spouse')">
+                  <option value="">in</option>
+                  <option value="0">0 in</option><option value="1">1 in</option>
+                  <option value="2">2 in</option><option value="3">3 in</option>
+                  <option value="4">4 in</option><option value="5">5 in</option>
+                  <option value="6">6 in</option><option value="7">7 in</option>
+                  <option value="8">8 in</option><option value="9">9 in</option>
+                  <option value="10">10 in</option><option value="11">11 in</option>
+                </select>
+              </div>
+              <div class="height-preview" id="spouseHeightPreview">
+                <span class="height-preview-lbl">Preview</span>—
+              </div>
+            </div>
+          </div>
           <div class="field"><label>Weight <span class="req">*</span></label><input type="text" id="spouseWeight" placeholder="140 lbs"></div>
         </div>
         <div class="sec-label">Spouse uses tobacco? <span class="req">*</span></div>
@@ -692,6 +756,26 @@ function togQ(btn, stateKey, detailId) {
 
 function getQVal(stateKey) { return qState[stateKey] || ""; }
 
+// ── HEIGHT HELPERS ──
+function updateHeightPreview(prefix) {
+  const ft = document.getElementById(prefix + "HeightFt")?.value || "";
+  const inches = document.getElementById(prefix + "HeightIn")?.value;
+  const preview = document.getElementById(prefix + "HeightPreview");
+  if (!preview) return;
+  let text = "—";
+  if (ft && inches !== "" && inches !== undefined) text = ft + " ft " + inches + " in";
+  else if (ft) text = ft + " ft";
+  preview.innerHTML = '<span class="height-preview-lbl">Preview</span>' + text;
+}
+
+function getHeightVal(prefix) {
+  const ft = document.getElementById(prefix + "HeightFt")?.value || "";
+  const inches = document.getElementById(prefix + "HeightIn")?.value;
+  if (!ft) return "";
+  if (inches !== "" && inches !== undefined) return ft + " ft " + inches + " in";
+  return ft + " ft";
+}
+
 // ── CONDITIONS LIST ──
 function buildConditionsList() {
   const el = document.getElementById("conditionsList");
@@ -801,7 +885,19 @@ function validateScreen2() {
 
 function validateScreen4() {
   let valid = true;
-  ["employeeHeight","employeeWeight"].forEach(id => {
+  if (!getHeightVal("employee")) {
+    const ftEl = document.getElementById("employeeHeightFt");
+    const inEl = document.getElementById("employeeHeightIn");
+    if (ftEl) ftEl.classList.add("error");
+    if (inEl) inEl.classList.add("error");
+    valid = false;
+  } else {
+    const ftEl = document.getElementById("employeeHeightFt");
+    const inEl = document.getElementById("employeeHeightIn");
+    if (ftEl) ftEl.classList.remove("error");
+    if (inEl) inEl.classList.remove("error");
+  }
+  ["employeeWeight"].forEach(id => {
     const el = document.getElementById(id);
     if (el && !el.value.trim()) { el.classList.add("error"); valid = false; }
     else if (el) el.classList.remove("error");
@@ -809,7 +905,19 @@ function validateScreen4() {
   if (!getToggleVal("employeeTobaccoGroup")) valid = false;
   const hasSpouse = coverageTier === "Self + Spouse" || coverageTier === "Self + Spouse + Child(ren)";
   if (hasSpouse) {
-    ["spouseHeight","spouseWeight"].forEach(id => {
+    if (!getHeightVal("spouse")) {
+      const ftEl = document.getElementById("spouseHeightFt");
+      const inEl = document.getElementById("spouseHeightIn");
+      if (ftEl) ftEl.classList.add("error");
+      if (inEl) inEl.classList.add("error");
+      valid = false;
+    } else {
+      const ftEl = document.getElementById("spouseHeightFt");
+      const inEl = document.getElementById("spouseHeightIn");
+      if (ftEl) ftEl.classList.remove("error");
+      if (inEl) inEl.classList.remove("error");
+    }
+    ["spouseWeight"].forEach(id => {
       const el = document.getElementById(id);
       if (el && !el.value.trim()) { el.classList.add("error"); valid = false; }
       else if (el) el.classList.remove("error");
@@ -881,9 +989,9 @@ function collectData() {
     medicarePerson: v("medicarePerson"), hicNumber: v("hicNumber"),
     medicarePartA: v("medicarePartA"), medicarePartB: v("medicarePartB"),
     medicareEligibility: v("medicareEligibility"),
-    employeeHeight: v("employeeHeight"), employeeWeight: v("employeeWeight"),
+    employeeHeight: getHeightVal("employee"), employeeWeight: v("employeeWeight"),
     employeeTobacco: getToggleVal("employeeTobaccoGroup"),
-    spouseHeight: v("spouseHeight"), spouseWeight: v("spouseWeight"),
+    spouseHeight: getHeightVal("spouse"), spouseWeight: v("spouseWeight"),
     spouseTobacco: getToggleVal("spouseTobaccoGroup"),
     pendingSurgery: getQVal("pendingSurgery"), pendingSurgeryDetail: v("pendingSurgeryDetailText"),
     pregnancy: getQVal("pregnancy"), pregnancyDetail: v("pregnancyDetailText"),

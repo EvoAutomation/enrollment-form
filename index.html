@@ -5,27 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Health Care Enrollment Questionnaire</title>
 <style>
-  /* ── Reset & Base ── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { font-size: 16px; -webkit-text-size-adjust: 100%; }
-  body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: #f0f4f8;
-    color: #1a202c;
-    min-height: 100vh;
-  }
-
-  /* ── Layout ── */
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f0f4f8; color: #1a202c; min-height: 100vh; }
   .app { max-width: 480px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; background: #fff; }
-
-  /* ── Header ── */
-  .header {
-    background: #1a5fa8;
-    padding: 16px 20px 0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
+  .header { background: #1a5fa8; padding: 16px 20px 0; position: sticky; top: 0; z-index: 100; }
   .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
   .header-title { color: #fff; font-size: 14px; font-weight: 600; line-height: 1.3; }
   .header-step { color: rgba(255,255,255,0.75); font-size: 12px; white-space: nowrap; margin-left: 10px; flex-shrink: 0; margin-top: 2px; }
@@ -34,229 +18,92 @@
   .progress-seg { height: 3px; flex: 1; border-radius: 2px; background: rgba(255,255,255,0.3); transition: background 0.3s; }
   .progress-seg.active { background: #fff; }
   .progress-spacer { height: 10px; }
-
-  /* ── Screens ── */
   .screen { display: none; flex-direction: column; flex: 1; }
   .screen.active { display: flex; }
   .screen-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-
-  /* ── Section Labels ── */
-  .sec-label {
-    font-size: 10px;
-    font-weight: 700;
-    color: #718096;
-    text-transform: uppercase;
-    letter-spacing: 0.7px;
-    margin-bottom: -8px;
-  }
-
-  /* ── Fields ── */
+  .sec-label { font-size: 10px; font-weight: 700; color: #718096; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: -8px; }
   .field { display: flex; flex-direction: column; gap: 5px; }
   .field label { font-size: 13px; color: #4a5568; font-weight: 500; }
-  .field input, .field select, .field textarea {
-    border: 1.5px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 11px 13px;
-    font-size: 16px;
-    color: #1a202c;
-    background: #f7fafc;
-    width: 100%;
-    transition: border-color 0.2s, background 0.2s;
-    -webkit-appearance: none;
-    appearance: none;
-  }
-  .field input:focus, .field select:focus, .field textarea:focus {
-    outline: none;
-    border-color: #1a5fa8;
-    background: #fff;
-  }
-  .field textarea { min-height: 80px; resize: vertical; font-family: inherit; }
+  .field input, .field select, .field textarea { border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 11px 13px; font-size: 16px; color: #1a202c; background: #f7fafc; width: 100%; transition: border-color 0.2s, background 0.2s; -webkit-appearance: none; appearance: none; font-family: inherit; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: #1a5fa8; background: #fff; }
+  .field textarea { min-height: 80px; resize: vertical; }
   .field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23718096' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 13px center; padding-right: 36px; }
   .field .hint { font-size: 11px; color: #a0aec0; margin-top: 1px; }
   .row2 { display: flex; gap: 10px; }
   .row2 .field { flex: 1; min-width: 0; }
-  .row2 .field input { width: 100%; }
-
-  /* ── Toggle Buttons ── */
   .toggle-group { display: flex; gap: 8px; flex-wrap: wrap; }
-  .toggle-btn {
-    padding: 9px 16px;
-    border-radius: 20px;
-    border: 1.5px solid #e2e8f0;
-    background: #f7fafc;
-    font-size: 14px;
-    color: #4a5568;
-    cursor: pointer;
-    transition: all 0.15s;
-    -webkit-tap-highlight-color: transparent;
-    font-family: inherit;
-  }
+  .toggle-btn { padding: 9px 16px; border-radius: 20px; border: 1.5px solid #e2e8f0; background: #f7fafc; font-size: 14px; color: #4a5568; cursor: pointer; transition: all 0.15s; -webkit-tap-highlight-color: transparent; font-family: inherit; }
   .toggle-btn.active { background: #dbeafe; border-color: #3b82f6; color: #1d4ed8; font-weight: 600; }
-
-  /* ── Radio Cards ── */
-  .radio-card {
-    border: 1.5px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 13px 15px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    transition: all 0.15s;
-    -webkit-tap-highlight-color: transparent;
-  }
+  .toggle-group.error-group .toggle-btn:not(.active) { border-color: #f87171; }
+  .tier-card { border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 16px 18px; cursor: pointer; display: flex; align-items: center; gap: 14px; transition: all 0.15s; -webkit-tap-highlight-color: transparent; }
+  .tier-card.active { border-color: #3b82f6; background: #eff6ff; }
+  .tier-dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #cbd5e0; flex-shrink: 0; transition: all 0.15s; }
+  .tier-card.active .tier-dot { background: #3b82f6; border-color: #3b82f6; }
+  .tier-name { font-size: 15px; font-weight: 600; color: #2d3748; }
+  .tier-desc { font-size: 12px; color: #718096; margin-top: 2px; }
+  .radio-card { border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 13px 15px; cursor: pointer; display: flex; align-items: center; gap: 13px; transition: all 0.15s; -webkit-tap-highlight-color: transparent; }
   .radio-card.active { border-color: #3b82f6; background: #eff6ff; }
-  .radio-dot {
-    width: 18px; height: 18px; border-radius: 50%;
-    border: 2px solid #cbd5e0; flex-shrink: 0;
-    transition: all 0.15s;
-  }
+  .radio-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #cbd5e0; flex-shrink: 0; transition: all 0.15s; }
   .radio-card.active .radio-dot { background: #3b82f6; border-color: #3b82f6; }
   .radio-label { font-size: 14px; color: #2d3748; }
-
-  /* ── Question Rows ── */
-  .q-row {
-    border: 1.5px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+  .q-row { border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .q-row.required-unanswered { border-color: #f87171; background: #fff5f5; }
   .q-text { font-size: 14px; color: #2d3748; line-height: 1.45; }
   .q-opts { display: flex; gap: 8px; }
-  .q-opt {
-    flex: 1; padding: 10px; border-radius: 9px;
-    border: 1.5px solid #e2e8f0; background: #f7fafc;
-    font-size: 14px; text-align: center; cursor: pointer;
-    color: #4a5568; transition: all 0.15s; font-family: inherit;
-    -webkit-tap-highlight-color: transparent;
-  }
+  .q-opt { flex: 1; padding: 10px; border-radius: 9px; border: 1.5px solid #e2e8f0; background: #f7fafc; font-size: 14px; text-align: center; cursor: pointer; color: #4a5568; transition: all 0.15s; font-family: inherit; -webkit-tap-highlight-color: transparent; }
   .q-opt.yes.active { background: #fee2e2; border-color: #fca5a5; color: #991b1b; font-weight: 600; }
   .q-opt.no.active { background: #dcfce7; border-color: #86efac; color: #15803d; font-weight: 600; }
-  .q-detail {
-    background: #f7fafc; border-radius: 9px; padding: 12px;
-    display: none; flex-direction: column; gap: 8px;
-  }
+  .q-detail { background: #f7fafc; border-radius: 9px; padding: 12px; display: none; flex-direction: column; gap: 8px; }
   .q-detail.visible { display: flex; }
   .q-detail label { font-size: 12px; color: #718096; font-weight: 500; }
-  .q-detail input, .q-detail select, .q-detail textarea {
-    border: 1.5px solid #e2e8f0; border-radius: 8px;
-    padding: 9px 11px; font-size: 14px; color: #1a202c;
-    background: #fff; width: 100%; font-family: inherit;
-  }
+  .q-detail input, .q-detail select, .q-detail textarea { border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 9px 11px; font-size: 14px; color: #1a202c; background: #fff; width: 100%; font-family: inherit; }
   .q-detail textarea { min-height: 70px; resize: vertical; }
-
-  /* ── Info / Warn Boxes ── */
-  .info-box {
-    background: #eff6ff; border: 1.5px solid #bfdbfe;
-    border-radius: 10px; padding: 12px 14px;
-    font-size: 13px; color: #1e40af; line-height: 1.55;
-  }
-  .warn-box {
-    background: #fffbeb; border: 1.5px solid #fde68a;
-    border-radius: 10px; padding: 12px 14px;
-    font-size: 13px; color: #92400e; line-height: 1.55;
-  }
-
-  /* ── Dependent Cards ── */
+  .info-box { background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #1e40af; line-height: 1.55; }
+  .warn-box { background: #fffbeb; border: 1.5px solid #fde68a; border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #92400e; line-height: 1.55; }
   .dep-card { border: 1.5px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
-  .dep-card-header {
-    background: #f7fafc; padding: 11px 15px;
-    font-size: 13px; font-weight: 600; color: #4a5568;
-    display: flex; justify-content: space-between; align-items: center;
-    cursor: pointer; -webkit-tap-highlight-color: transparent;
-  }
+  .dep-card-header { background: #f7fafc; padding: 11px 15px; font-size: 13px; font-weight: 600; color: #4a5568; display: flex; justify-content: space-between; align-items: center; cursor: pointer; -webkit-tap-highlight-color: transparent; }
   .dep-card-header .add-link { font-size: 12px; color: #1a5fa8; font-weight: 500; }
   .dep-card-body { padding: 14px; display: flex; flex-direction: column; gap: 12px; }
   .dep-card-body.hidden { display: none; }
-
-  /* ── Medication Rows ── */
+  .count-box { display: flex; flex-direction: column; gap: 8px; }
+  .count-label-text { font-size: 13px; color: #4a5568; font-weight: 500; }
+  .count-row { display: flex; align-items: center; gap: 14px; }
+  .count-btn { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid #e2e8f0; background: #f7fafc; font-size: 22px; color: #4a5568; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; font-family: inherit; -webkit-tap-highlight-color: transparent; transition: all 0.15s; }
+  .count-btn:active { background: #dbeafe; border-color: #3b82f6; color: #1d4ed8; }
+  .count-val { font-size: 26px; font-weight: 700; color: #1a202c; min-width: 32px; text-align: center; }
+  .count-desc { font-size: 13px; color: #718096; }
+  .child-cards { display: flex; flex-direction: column; gap: 12px; }
+  .divider { height: 1px; background: #e2e8f0; }
   .med-row { border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; position: relative; }
-  .med-remove { position: absolute; top: 10px; right: 12px; background: none; border: none; color: #a0aec0; font-size: 18px; cursor: pointer; padding: 0; line-height: 1; }
-
-  /* ── Add More Link ── */
-  .add-more {
-    text-align: center; font-size: 14px; color: #1a5fa8;
-    cursor: pointer; padding: 8px; font-weight: 500;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  /* ── Review ── */
-  .review-section-title {
-    font-size: 11px; font-weight: 700; color: #a0aec0;
-    text-transform: uppercase; letter-spacing: 0.6px;
-    padding: 10px 0 4px; border-bottom: 1.5px solid #e2e8f0; margin-bottom: 2px;
-  }
+  .med-remove { position: absolute; top: 10px; right: 12px; background: none; border: none; color: #a0aec0; font-size: 20px; cursor: pointer; padding: 0; line-height: 1; }
+  .add-more { text-align: center; font-size: 14px; color: #1a5fa8; cursor: pointer; padding: 8px; font-weight: 500; -webkit-tap-highlight-color: transparent; }
+  .review-section-title { font-size: 11px; font-weight: 700; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.6px; padding: 10px 0 4px; border-bottom: 1.5px solid #e2e8f0; margin-bottom: 2px; }
   .review-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #f0f4f8; gap: 12px; }
   .review-row:last-child { border-bottom: none; }
   .review-label { font-size: 13px; color: #718096; flex-shrink: 0; }
   .review-value { font-size: 13px; color: #1a202c; font-weight: 600; text-align: right; }
-
-  /* ── Nav ── */
   .nav { display: flex; gap: 10px; padding: 16px 20px; border-top: 1.5px solid #f0f4f8; background: #fff; }
-  .btn-back {
-    flex: 1; padding: 14px; border-radius: 12px;
-    border: 1.5px solid #e2e8f0; background: #fff;
-    color: #718096; font-size: 15px; cursor: pointer; font-family: inherit;
-  }
-  .btn-next {
-    flex: 2; padding: 14px; border-radius: 12px;
-    border: none; background: #1a5fa8;
-    color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit;
-    transition: background 0.2s;
-  }
-  .btn-next:active { background: #1557a0; }
-  .btn-submit {
-    flex: 2; padding: 14px; border-radius: 12px;
-    border: none; background: #15803d;
-    color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit;
-    transition: background 0.2s;
-  }
-  .btn-submit:active { background: #166534; }
+  .btn-back { flex: 1; padding: 14px; border-radius: 12px; border: 1.5px solid #e2e8f0; background: #fff; color: #718096; font-size: 15px; cursor: pointer; font-family: inherit; }
+  .btn-next { flex: 2; padding: 14px; border-radius: 12px; border: none; background: #1a5fa8; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .btn-submit { flex: 2; padding: 14px; border-radius: 12px; border: none; background: #15803d; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; }
   .btn-submit:disabled { background: #9ca3af; cursor: not-allowed; }
-
-  /* ── Success ── */
-  .success-screen {
-    display: none; flex-direction: column;
-    align-items: center; justify-content: center;
-    min-height: 60vh; gap: 16px; padding: 40px 30px; text-align: center;
-  }
+  .success-screen { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 16px; padding: 40px 30px; text-align: center; }
   .success-screen.active { display: flex; }
-  .check-circle {
-    width: 72px; height: 72px; border-radius: 50%;
-    background: #dcfce7; display: flex; align-items: center; justify-content: center;
-  }
+  .check-circle { width: 72px; height: 72px; border-radius: 50%; background: #dcfce7; display: flex; align-items: center; justify-content: center; }
   .success-title { font-size: 24px; font-weight: 700; color: #1a202c; }
-
-  /* ── Submitting Overlay ── */
-  .submitting {
-    display: none; position: fixed; inset: 0;
-    background: rgba(255,255,255,0.9); z-index: 999;
-    align-items: center; justify-content: center;
-    flex-direction: column; gap: 16px;
-  }
+  .submitting { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 999; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
   .submitting.active { display: flex; }
-  .spinner {
-    width: 40px; height: 40px; border: 3px solid #e2e8f0;
-    border-top-color: #1a5fa8; border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
+  .spinner { width: 40px; height: 40px; border: 3px solid #e2e8f0; border-top-color: #1a5fa8; border-radius: 50%; animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .submitting-text { font-size: 15px; color: #4a5568; }
-
-  /* ── Validation ── */
   .field input.error, .field select.error { border-color: #f87171; background: #fff5f5; }
-  .error-msg { font-size: 12px; color: #dc2626; margin-top: 2px; }
+  .req { color: #dc2626; }
+  .req-note { font-size: 12px; color: #dc2626; font-weight: 500; }
 </style>
 </head>
 <body>
-
 <div class="app">
 
-  <!-- ══════════════════════════════════════
-       HEADER (sticky)
-  ══════════════════════════════════════ -->
   <div class="header">
     <div class="header-top">
       <div class="header-title" id="headerTitle">Health Care Enrollment Questionnaire</div>
@@ -267,192 +114,108 @@
     <div class="progress-spacer"></div>
   </div>
 
-  <!-- ══════════════════════════════════════
-       SCREEN 1 — YOUR INFORMATION
-  ══════════════════════════════════════ -->
+  <!-- ══ SCREEN 1: YOUR INFORMATION + TIER ══ -->
   <div class="screen active" id="sc1">
     <div class="screen-body">
-
       <div class="sec-label">Legal name (as it appears on your ID)</div>
       <div class="row2">
-        <div class="field">
-          <label>First name <span style="color:#dc2626">*</span></label>
-          <input type="text" id="firstName" autocomplete="given-name" placeholder="John">
-        </div>
-        <div class="field">
-          <label>Last name <span style="color:#dc2626">*</span></label>
-          <input type="text" id="lastName" autocomplete="family-name" placeholder="Smith">
-        </div>
+        <div class="field"><label>First name <span class="req">*</span></label><input type="text" id="firstName" autocomplete="given-name" placeholder="John"></div>
+        <div class="field"><label>Last name <span class="req">*</span></label><input type="text" id="lastName" autocomplete="family-name" placeholder="Smith"></div>
       </div>
-      <div class="field" style="max-width:100px">
-        <label>Middle initial</label>
-        <input type="text" id="middleInitial" maxlength="1" placeholder="A">
-      </div>
+      <div class="field" style="max-width:100px"><label>Middle initial</label><input type="text" id="middleInitial" maxlength="1" placeholder="A"></div>
 
       <div class="sec-label">Contact & identity</div>
-      <div class="field">
-        <label>Home address <span style="color:#dc2626">*</span></label>
-        <input type="text" id="address" autocomplete="street-address" placeholder="123 Oak St">
-      </div>
+      <div class="field"><label>Home address <span class="req">*</span></label><input type="text" id="address" autocomplete="street-address" placeholder="123 Oak St"></div>
       <div class="row2">
-        <div class="field">
-          <label>City <span style="color:#dc2626">*</span></label>
-          <input type="text" id="city" autocomplete="address-level2" placeholder="Virginia Beach">
-        </div>
+        <div class="field"><label>City <span class="req">*</span></label><input type="text" id="city" autocomplete="address-level2" placeholder="Virginia Beach"></div>
         <div class="field" style="max-width:80px">
           <label>State</label>
-          <select id="state">
-            <option>VA</option><option>AL</option><option>AK</option><option>AZ</option><option>AR</option>
-            <option>CA</option><option>CO</option><option>CT</option><option>DE</option><option>FL</option>
-            <option>GA</option><option>HI</option><option>ID</option><option>IL</option><option>IN</option>
-            <option>IA</option><option>KS</option><option>KY</option><option>LA</option><option>ME</option>
-            <option>MD</option><option>MA</option><option>MI</option><option>MN</option><option>MS</option>
-            <option>MO</option><option>MT</option><option>NE</option><option>NV</option><option>NH</option>
-            <option>NJ</option><option>NM</option><option>NY</option><option>NC</option><option>ND</option>
-            <option>OH</option><option>OK</option><option>OR</option><option>PA</option><option>RI</option>
-            <option>SC</option><option>SD</option><option>TN</option><option>TX</option><option>UT</option>
-            <option>VT</option><option>WA</option><option>WV</option><option>WI</option><option>WY</option>
-          </select>
+          <select id="state"><option>VA</option><option>AL</option><option>AK</option><option>AZ</option><option>AR</option><option>CA</option><option>CO</option><option>CT</option><option>DE</option><option>FL</option><option>GA</option><option>HI</option><option>ID</option><option>IL</option><option>IN</option><option>IA</option><option>KS</option><option>KY</option><option>LA</option><option>ME</option><option>MD</option><option>MA</option><option>MI</option><option>MN</option><option>MS</option><option>MO</option><option>MT</option><option>NE</option><option>NV</option><option>NH</option><option>NJ</option><option>NM</option><option>NY</option><option>NC</option><option>ND</option><option>OH</option><option>OK</option><option>OR</option><option>PA</option><option>RI</option><option>SC</option><option>SD</option><option>TN</option><option>TX</option><option>UT</option><option>VT</option><option>WA</option><option>WV</option><option>WI</option><option>WY</option></select>
         </div>
-        <div class="field" style="max-width:100px">
-          <label>Zip <span style="color:#dc2626">*</span></label>
-          <input type="text" id="zip" inputmode="numeric" maxlength="10" placeholder="23000">
-        </div>
+        <div class="field" style="max-width:100px"><label>Zip <span class="req">*</span></label><input type="text" id="zip" inputmode="numeric" maxlength="10" placeholder="23000"></div>
       </div>
+      <div class="field"><label>Primary phone <span class="req">*</span></label><input type="tel" id="primaryPhone" autocomplete="tel" placeholder="(757) 555-0100"></div>
+      <div class="field"><label>Secondary phone (optional)</label><input type="tel" id="secondaryPhone" autocomplete="tel" placeholder="(757) 555-0200"></div>
+      <div class="field"><label>Email address</label><input type="email" id="email" autocomplete="email" placeholder="john@email.com"></div>
       <div class="field">
-        <label>Primary phone <span style="color:#dc2626">*</span></label>
-        <input type="tel" id="primaryPhone" autocomplete="tel" placeholder="(757) 555-0100">
-      </div>
-      <div class="field">
-        <label>Secondary phone (optional)</label>
-        <input type="tel" id="secondaryPhone" autocomplete="tel" placeholder="(757) 555-0200">
-      </div>
-      <div class="field">
-        <label>Email address</label>
-        <input type="email" id="email" autocomplete="email" placeholder="john@email.com">
-      </div>
-      <div class="field">
-        <label>Social Security Number <span style="color:#dc2626">*</span></label>
+        <label>Social Security Number <span class="req">*</span></label>
         <input type="password" id="ssn" inputmode="numeric" maxlength="11" placeholder="•••-••-••••">
         <span class="hint">Required by the health plan</span>
       </div>
-      <div class="field">
-        <label>Date of birth <span style="color:#dc2626">*</span></label>
-        <input type="date" id="dob" autocomplete="bday">
-      </div>
+      <div class="field"><label>Date of birth <span class="req">*</span></label><input type="date" id="dob" autocomplete="bday"></div>
 
-      <div class="sec-label">Gender</div>
+      <div class="sec-label">Gender <span class="req">*</span></div>
       <div class="toggle-group" id="genderGroup">
-        <button type="button" class="toggle-btn active" data-val="Male" onclick="toggleBtn(this,'genderGroup')">Male</button>
+        <button type="button" class="toggle-btn" data-val="Male" onclick="toggleBtn(this,'genderGroup')">Male</button>
         <button type="button" class="toggle-btn" data-val="Female" onclick="toggleBtn(this,'genderGroup')">Female</button>
       </div>
 
-      <div class="sec-label">Disabled?</div>
+      <div class="sec-label">Disabled? <span class="req">*</span></div>
       <div class="toggle-group" id="disabledGroup">
-        <button type="button" class="toggle-btn active" data-val="No" onclick="toggleBtn(this,'disabledGroup')">No</button>
+        <button type="button" class="toggle-btn" data-val="No" onclick="toggleBtn(this,'disabledGroup')">No</button>
         <button type="button" class="toggle-btn" data-val="Yes" onclick="toggleBtn(this,'disabledGroup')">Yes</button>
       </div>
 
-    </div>
-    <div class="nav">
-      <button class="btn-next" onclick="goNext(1)">Next →</button>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════
-       SCREEN 2 — DEPENDENTS
-  ══════════════════════════════════════ -->
-  <div class="screen" id="sc2">
-    <div class="screen-body">
-      <div class="info-box">Add your spouse and up to 4 children. Skip any that don't apply.</div>
-
-      <!-- Spouse -->
-      <div class="dep-card">
-        <div class="dep-card-header" onclick="toggleDepCard('spouseBody','spouseToggle')">
-          Spouse
-          <span class="add-link" id="spouseToggle">+ expand</span>
+      <div class="sec-label">Who are you enrolling? <span class="req">*</span></div>
+      <div style="display:flex;flex-direction:column;gap:10px" id="tierGroup">
+        <div class="tier-card active" onclick="selectTier(this)" data-val="Self">
+          <div class="tier-dot"></div>
+          <div><div class="tier-name">Self only</div><div class="tier-desc">Just the employee</div></div>
         </div>
-        <div class="dep-card-body hidden" id="spouseBody">
-          <div class="row2">
-            <div class="field"><label>First name</label><input type="text" id="spouseFirstName" placeholder="Jane"></div>
-            <div class="field"><label>Last name</label><input type="text" id="spouseLastName" placeholder="Smith"></div>
-          </div>
-          <div class="field" style="max-width:100px"><label>Middle initial</label><input type="text" id="spouseMiddleInitial" maxlength="1" placeholder="B"></div>
-          <div class="field"><label>Social Security Number</label><input type="password" id="spouseSSN" inputmode="numeric" maxlength="11" placeholder="•••-••-••••"></div>
-          <div class="field"><label>Date of birth</label><input type="date" id="spouseDOB"></div>
-          <div class="sec-label">Gender</div>
-          <div class="toggle-group" id="spouseGenderGroup">
-            <button type="button" class="toggle-btn active" data-val="Female" onclick="toggleBtn(this,'spouseGenderGroup')">Female</button>
-            <button type="button" class="toggle-btn" data-val="Male" onclick="toggleBtn(this,'spouseGenderGroup')">Male</button>
-          </div>
-          <div class="sec-label">Disabled?</div>
-          <div class="toggle-group" id="spouseDisabledGroup">
-            <button type="button" class="toggle-btn active" data-val="No" onclick="toggleBtn(this,'spouseDisabledGroup')">No</button>
-            <button type="button" class="toggle-btn" data-val="Yes" onclick="toggleBtn(this,'spouseDisabledGroup')">Yes</button>
-          </div>
-          <div class="field"><label>Primary care physician — last name</label><input type="text" id="spousePCPLast" placeholder="If HMO plan"></div>
-          <div class="field"><label>Primary care physician — first name</label><input type="text" id="spousePCPFirst" placeholder="If HMO plan"></div>
+        <div class="tier-card" onclick="selectTier(this)" data-val="Self + Spouse">
+          <div class="tier-dot"></div>
+          <div><div class="tier-name">Self + Spouse</div><div class="tier-desc">Employee and spouse</div></div>
+        </div>
+        <div class="tier-card" onclick="selectTier(this)" data-val="Self + Child(ren)">
+          <div class="tier-dot"></div>
+          <div><div class="tier-name">Self + Child(ren)</div><div class="tier-desc">Employee and one or more children</div></div>
+        </div>
+        <div class="tier-card" onclick="selectTier(this)" data-val="Self + Spouse + Child(ren)">
+          <div class="tier-dot"></div>
+          <div><div class="tier-name">Self + Spouse + Child(ren)</div><div class="tier-desc">Full family coverage</div></div>
         </div>
       </div>
 
-      <!-- Children -->
-      <div id="childrenContainer"></div>
-      <div class="add-more" id="addChildBtn" onclick="addChild()">+ Add a child</div>
-
     </div>
+    <div class="nav"><button class="btn-next" onclick="goNext(1)">Next →</button></div>
+  </div>
+
+  <!-- ══ SCREEN 2: DEPENDENTS (built dynamically) ══ -->
+  <div class="screen" id="sc2">
+    <div class="screen-body" id="sc2Body"></div>
     <div class="nav">
       <button class="btn-back" onclick="goBack(2)">← Back</button>
       <button class="btn-next" onclick="goNext(2)">Next →</button>
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════
-       SCREEN 3 — CURRENT COVERAGE
-  ══════════════════════════════════════ -->
+  <!-- ══ SCREEN 3: CURRENT COVERAGE ══ -->
   <div class="screen" id="sc3">
     <div class="screen-body">
-
       <div class="sec-label">Your current coverage situation</div>
       <div style="display:flex;flex-direction:column;gap:8px" id="coverageGroup">
-        <div class="radio-card active" onclick="selectRadio(this,'coverageGroup')" data-val="No current coverage">
-          <div class="radio-dot"></div>
-          <div class="radio-label">I have no current coverage</div>
-        </div>
-        <div class="radio-card" onclick="selectRadio(this,'coverageGroup')" data-val="Replacing current coverage">
-          <div class="radio-dot"></div>
-          <div class="radio-label">This plan will replace my current coverage</div>
-        </div>
-        <div class="radio-card" onclick="selectRadio(this,'coverageGroup')" data-val="Keeping current coverage alongside">
-          <div class="radio-dot"></div>
-          <div class="radio-label">I'll keep my current coverage alongside this plan</div>
-        </div>
+        <div class="radio-card active" onclick="selectRadio(this,'coverageGroup')" data-val="No current coverage"><div class="radio-dot"></div><div class="radio-label">I have no current coverage</div></div>
+        <div class="radio-card" onclick="selectRadio(this,'coverageGroup')" data-val="Replacing current coverage"><div class="radio-dot"></div><div class="radio-label">This plan will replace my current coverage</div></div>
+        <div class="radio-card" onclick="selectRadio(this,'coverageGroup')" data-val="Keeping current coverage alongside"><div class="radio-dot"></div><div class="radio-label">I'll keep my current coverage alongside this plan</div></div>
       </div>
-
       <div class="sec-label">Current coverage details (if applicable)</div>
       <div class="field"><label>Insured person's name</label><input type="text" id="insuredName" placeholder="Leave blank if no current coverage"></div>
-      <div class="field"><label>Policy / ID number</label><input type="text" id="policyNumber" placeholder=""></div>
-      <div class="field"><label>Insurance company name</label><input type="text" id="insuranceCompany" placeholder=""></div>
-      <div class="field"><label>Employer or organization providing coverage</label><input type="text" id="coverageEmployer" placeholder=""></div>
+      <div class="field"><label>Policy / ID number</label><input type="text" id="policyNumber"></div>
+      <div class="field"><label>Insurance company name</label><input type="text" id="insuranceCompany"></div>
+      <div class="field"><label>Employer or organization providing coverage</label><input type="text" id="coverageEmployer"></div>
       <div class="field"><label>Effective date of current coverage</label><input type="date" id="coverageEffectiveDate"></div>
       <div class="field"><label>Who else on this application is covered?</label><input type="text" id="alsoCovered" placeholder="e.g. spouse, all children"></div>
-
       <div class="sec-label">Medicare (if applicable)</div>
       <div class="field"><label>Medicare covered person name</label><input type="text" id="medicarePerson" placeholder="Leave blank if not applicable"></div>
-      <div class="field"><label>HIC number</label><input type="text" id="hicNumber" placeholder=""></div>
+      <div class="field"><label>HIC number</label><input type="text" id="hicNumber"></div>
       <div class="row2">
         <div class="field"><label>Part A effective date</label><input type="date" id="medicarePartA"></div>
         <div class="field"><label>Part B effective date</label><input type="date" id="medicarePartB"></div>
       </div>
       <div class="field">
         <label>Medicare eligibility reason</label>
-        <select id="medicareEligibility">
-          <option value="">Not applicable</option>
-          <option>Age</option><option>Disability</option><option>65 or over</option>
-          <option>Working</option><option>Retired</option>
-          <option>End Stage Renal Disease</option><option>Disability & Current ESRD</option>
-        </select>
+        <select id="medicareEligibility"><option value="">Not applicable</option><option>Age</option><option>Disability</option><option>65 or over</option><option>Working</option><option>Retired</option><option>End Stage Renal Disease</option><option>Disability & Current ESRD</option></select>
       </div>
-
     </div>
     <div class="nav">
       <button class="btn-back" onclick="goBack(3)">← Back</button>
@@ -460,61 +223,56 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════
-       SCREEN 4 — HEALTH BASICS
-  ══════════════════════════════════════ -->
+  <!-- ══ SCREEN 4: HEALTH BASICS ══ -->
   <div class="screen" id="sc4">
     <div class="screen-body">
       <div class="info-box">Required for all applicants age 21+. Your answers are strictly confidential.</div>
-
       <div class="sec-label">Employee</div>
       <div class="row2">
-        <div class="field"><label>Height</label><input type="text" id="employeeHeight" placeholder="5 ft 10 in"></div>
-        <div class="field"><label>Weight</label><input type="text" id="employeeWeight" placeholder="175 lbs"></div>
+        <div class="field"><label>Height <span class="req">*</span></label><input type="text" id="employeeHeight" placeholder="5 ft 10 in"></div>
+        <div class="field"><label>Weight <span class="req">*</span></label><input type="text" id="employeeWeight" placeholder="175 lbs"></div>
       </div>
-      <div class="sec-label">Do you use tobacco?</div>
+      <div class="sec-label">Do you use tobacco? <span class="req">*</span></div>
       <div class="toggle-group" id="employeeTobaccoGroup">
         <button type="button" class="toggle-btn" data-val="Yes" onclick="toggleBtn(this,'employeeTobaccoGroup')">Yes</button>
-        <button type="button" class="toggle-btn active" data-val="No" onclick="toggleBtn(this,'employeeTobaccoGroup')">No</button>
+        <button type="button" class="toggle-btn" data-val="No" onclick="toggleBtn(this,'employeeTobaccoGroup')">No</button>
       </div>
-
-      <div class="sec-label">Spouse (if applicable)</div>
-      <div class="row2">
-        <div class="field"><label>Height</label><input type="text" id="spouseHeight" placeholder="5 ft 6 in"></div>
-        <div class="field"><label>Weight</label><input type="text" id="spouseWeight" placeholder="140 lbs"></div>
+      <div id="spouseHealthSection">
+        <div class="sec-label" style="margin-top:4px">Spouse</div>
+        <div class="row2">
+          <div class="field"><label>Height <span class="req">*</span></label><input type="text" id="spouseHeight" placeholder="5 ft 6 in"></div>
+          <div class="field"><label>Weight <span class="req">*</span></label><input type="text" id="spouseWeight" placeholder="140 lbs"></div>
+        </div>
+        <div class="sec-label">Spouse uses tobacco? <span class="req">*</span></div>
+        <div class="toggle-group" id="spouseTobaccoGroup">
+          <button type="button" class="toggle-btn" data-val="Yes" onclick="toggleBtn(this,'spouseTobaccoGroup')">Yes</button>
+          <button type="button" class="toggle-btn" data-val="No" onclick="toggleBtn(this,'spouseTobaccoGroup')">No</button>
+        </div>
       </div>
-      <div class="sec-label">Spouse uses tobacco?</div>
-      <div class="toggle-group" id="spouseTobaccoGroup">
-        <button type="button" class="toggle-btn" data-val="Yes" onclick="toggleBtn(this,'spouseTobaccoGroup')">Yes</button>
-        <button type="button" class="toggle-btn active" data-val="No" onclick="toggleBtn(this,'spouseTobaccoGroup')">No</button>
-      </div>
-
       <div class="sec-label">General health questions</div>
-
-      <div class="q-row">
+      <div class="req-note">All questions below must be answered.</div>
+      <div class="q-row" id="qrow_pendingSurgery">
         <div class="q-text">Have you been advised to have any testing, surgery, or treatment that hasn't been done yet?</div>
         <div class="q-opts">
           <button type="button" class="q-opt yes" onclick="togQ(this,'pendingSurgery','pendingSurgeryDetail')">Yes</button>
-          <button type="button" class="q-opt no active" onclick="togQ(this,'pendingSurgery','pendingSurgeryDetail')">No</button>
+          <button type="button" class="q-opt no" onclick="togQ(this,'pendingSurgery','pendingSurgeryDetail')">No</button>
         </div>
         <div class="q-detail" id="pendingSurgeryDetail">
           <label>Who? What is the diagnosis and treatment options?</label>
-          <input type="text" id="pendingSurgeryDetailText" placeholder="">
+          <input type="text" id="pendingSurgeryDetailText">
         </div>
       </div>
-
-      <div class="q-row">
+      <div class="q-row" id="qrow_pregnancy">
         <div class="q-text">Is anyone on this application currently pregnant or in the process of adopting?</div>
         <div class="q-opts">
           <button type="button" class="q-opt yes" onclick="togQ(this,'pregnancy','pregnancyDetail')">Yes</button>
-          <button type="button" class="q-opt no active" onclick="togQ(this,'pregnancy','pregnancyDetail')">No</button>
+          <button type="button" class="q-opt no" onclick="togQ(this,'pregnancy','pregnancyDetail')">No</button>
         </div>
         <div class="q-detail" id="pregnancyDetail">
           <label>Who? Due date or adoption date?</label>
           <input type="text" id="pregnancyDetailText" placeholder="e.g. Spouse — due 08/15/2025">
         </div>
       </div>
-
     </div>
     <div class="nav">
       <button class="btn-back" onclick="goBack(4)">← Back</button>
@@ -522,12 +280,11 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════
-       SCREEN 5 — HEALTH CONDITIONS
-  ══════════════════════════════════════ -->
+  <!-- ══ SCREEN 5: HEALTH CONDITIONS ══ -->
   <div class="screen" id="sc5">
     <div class="screen-body">
       <div class="warn-box">Answer for yourself, spouse, and all children applying. Answer "Yes" only if diagnosed, treated, or advised to seek treatment in the last 5 years.</div>
+      <div class="req-note">All questions must be answered before continuing.</div>
       <div id="conditionsList"></div>
     </div>
     <div class="nav">
@@ -536,130 +293,108 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════
-       SCREEN 6 — ADDITIONAL HEALTH + MEDS
-  ══════════════════════════════════════ -->
+  <!-- ══ SCREEN 6: ADDITIONAL HEALTH + MEDS ══ -->
   <div class="screen" id="sc6">
     <div class="screen-body">
       <div class="sec-label">Additional health questions</div>
-
-      <!-- Diabetes -->
-      <div class="q-row">
+      <div class="req-note">All questions must be answered before continuing.</div>
+      <div class="q-row" id="qrow_diabetes">
         <div class="q-text">Does anyone have or have had diabetes?</div>
         <div class="q-opts">
           <button type="button" class="q-opt yes" onclick="togQ(this,'diabetes','diabetesDetail')">Yes</button>
-          <button type="button" class="q-opt no active" onclick="togQ(this,'diabetes','diabetesDetail')">No</button>
+          <button type="button" class="q-opt no" onclick="togQ(this,'diabetes','diabetesDetail')">No</button>
         </div>
         <div class="q-detail" id="diabetesDetail">
-          <label>Who?</label><input type="text" id="diabetesWho" placeholder="Name">
-          <label>Type</label>
-          <select id="diabetesType"><option>Type 1 (juvenile)</option><option>Type 2 (adult onset)</option></select>
-          <label>Treatment</label>
-          <select id="diabetesTreatment"><option>Diet controlled</option><option>Oral medication</option><option>Insulin</option></select>
+          <label>Who?</label><input type="text" id="diabetesWho">
+          <label>Type</label><select id="diabetesType"><option>Type 1 (juvenile)</option><option>Type 2 (adult onset)</option></select>
+          <label>Treatment</label><select id="diabetesTreatment"><option>Diet controlled</option><option>Oral medication</option><option>Insulin</option></select>
           <label>Date diagnosed</label><input type="date" id="diabetesDiagnosed">
         </div>
       </div>
-
-      <!-- Drug/Alcohol -->
-      <div class="q-row">
+      <div class="q-row" id="qrow_drugAlcohol">
         <div class="q-text">Has anyone been treated for alcohol or drug abuse in the last 5 years?</div>
         <div class="q-opts">
           <button type="button" class="q-opt yes" onclick="togQ(this,'drugAlcohol','drugAlcoholDetail')">Yes</button>
-          <button type="button" class="q-opt no active" onclick="togQ(this,'drugAlcohol','drugAlcoholDetail')">No</button>
+          <button type="button" class="q-opt no" onclick="togQ(this,'drugAlcohol','drugAlcoholDetail')">No</button>
         </div>
         <div class="q-detail" id="drugAlcoholDetail">
-          <label>Who?</label><input type="text" id="drugAlcoholWho" placeholder="Name">
-          <label>Type</label>
-          <select id="drugAlcoholType"><option>Illegal drugs</option><option>Prescription drugs</option><option>Alcohol</option></select>
-          <label>Was person confined to a rehab facility?</label>
+          <label>Who?</label><input type="text" id="drugAlcoholWho">
+          <label>Type</label><select id="drugAlcoholType"><option>Illegal drugs</option><option>Prescription drugs</option><option>Alcohol</option></select>
+          <label>Confined to rehab facility?</label>
           <div class="toggle-group" id="rehabGroup">
             <button type="button" class="toggle-btn" data-val="Yes" onclick="toggleBtn(this,'rehabGroup')">Yes</button>
-            <button type="button" class="toggle-btn active" data-val="No" onclick="toggleBtn(this,'rehabGroup')">No</button>
+            <button type="button" class="toggle-btn" data-val="No" onclick="toggleBtn(this,'rehabGroup')">No</button>
           </div>
         </div>
       </div>
-
-      <!-- Mental Health -->
-      <div class="q-row">
+      <div class="q-row" id="qrow_mentalHealth">
         <div class="q-text">Has anyone been treated for anxiety, depression, bipolar disorder, or other mental health conditions?</div>
         <div class="q-opts">
           <button type="button" class="q-opt yes" onclick="togQ(this,'mentalHealth','mentalHealthDetail')">Yes</button>
-          <button type="button" class="q-opt no active" onclick="togQ(this,'mentalHealth','mentalHealthDetail')">No</button>
+          <button type="button" class="q-opt no" onclick="togQ(this,'mentalHealth','mentalHealthDetail')">No</button>
         </div>
         <div class="q-detail" id="mentalHealthDetail">
-          <label>Who and what is the diagnosis?</label><input type="text" id="mentalHealthWho" placeholder="">
-          <label>Treatment type</label>
-          <select id="mentalHealthTreatment"><option>Inpatient</option><option>Prescription medication</option><option>Counseling</option></select>
+          <label>Who and what is the diagnosis?</label><input type="text" id="mentalHealthWho">
+          <label>Treatment type</label><select id="mentalHealthTreatment"><option>Inpatient</option><option>Prescription medication</option><option>Counseling</option></select>
           <label>Still under treatment?</label>
           <div class="toggle-group" id="mentalOngoingGroup">
             <button type="button" class="toggle-btn" data-val="Yes" onclick="toggleBtn(this,'mentalOngoingGroup')">Yes</button>
-            <button type="button" class="toggle-btn active" data-val="No" onclick="toggleBtn(this,'mentalOngoingGroup')">No</button>
+            <button type="button" class="toggle-btn" data-val="No" onclick="toggleBtn(this,'mentalOngoingGroup')">No</button>
           </div>
         </div>
       </div>
-
-      <!-- Upcoming Surgery -->
-      <div class="q-row">
+      <div class="q-row" id="qrow_upcomingSurgery">
         <div class="q-text">Has anyone been advised to have diagnostic tests, surgery, or hospitalization in the next 12 months?</div>
         <div class="q-opts">
           <button type="button" class="q-opt yes" onclick="togQ(this,'upcomingSurgery','upcomingSurgeryDetail')">Yes</button>
-          <button type="button" class="q-opt no active" onclick="togQ(this,'upcomingSurgery','upcomingSurgeryDetail')">No</button>
+          <button type="button" class="q-opt no" onclick="togQ(this,'upcomingSurgery','upcomingSurgeryDetail')">No</button>
         </div>
         <div class="q-detail" id="upcomingSurgeryDetail">
           <label>Who and for what reason?</label>
-          <textarea id="upcomingSurgeryDetailText" placeholder="Please describe"></textarea>
+          <textarea id="upcomingSurgeryDetailText"></textarea>
         </div>
       </div>
-
-      <!-- Disability -->
-      <div class="q-row">
+      <div class="q-row" id="qrow_disabilityBenefits">
         <div class="q-text">Has anyone received disability benefits because of illness or injury?</div>
         <div class="q-opts">
           <button type="button" class="q-opt yes" onclick="togQ(this,'disabilityBenefits','disabilityDetail')">Yes</button>
-          <button type="button" class="q-opt no active" onclick="togQ(this,'disabilityBenefits','disabilityDetail')">No</button>
+          <button type="button" class="q-opt no" onclick="togQ(this,'disabilityBenefits','disabilityDetail')">No</button>
         </div>
         <div class="q-detail" id="disabilityDetail">
-          <label>Who and nature of disability?</label><input type="text" id="disabilityWho" placeholder="">
+          <label>Who and nature of disability?</label><input type="text" id="disabilityWho">
           <label>Still disabled?</label>
           <div class="toggle-group" id="stillDisabledGroup">
             <button type="button" class="toggle-btn" data-val="Yes" onclick="toggleBtn(this,'stillDisabledGroup')">Yes</button>
-            <button type="button" class="toggle-btn active" data-val="No" onclick="toggleBtn(this,'stillDisabledGroup')">No</button>
+            <button type="button" class="toggle-btn" data-val="No" onclick="toggleBtn(this,'stillDisabledGroup')">No</button>
           </div>
         </div>
       </div>
-
-      <!-- Other Conditions -->
-      <div class="q-row">
+      <div class="q-row" id="qrow_otherConditions">
         <div class="q-text">Has anyone consulted a doctor for any condition not listed on the previous screen?</div>
         <div class="q-opts">
           <button type="button" class="q-opt yes" onclick="togQ(this,'otherConditions','otherConditionsDetail')">Yes</button>
-          <button type="button" class="q-opt no active" onclick="togQ(this,'otherConditions','otherConditionsDetail')">No</button>
+          <button type="button" class="q-opt no" onclick="togQ(this,'otherConditions','otherConditionsDetail')">No</button>
         </div>
         <div class="q-detail" id="otherConditionsDetail">
           <label>Who and details?</label>
-          <textarea id="otherConditionsDetailText" placeholder="Please describe"></textarea>
+          <textarea id="otherConditionsDetailText"></textarea>
         </div>
       </div>
-
-      <!-- Over $5k -->
-      <div class="q-row">
+      <div class="q-row" id="qrow_over5kMedical">
         <div class="q-text">Has anyone had more than $5,000 in medical services in the last 12 months?</div>
         <div class="q-opts">
           <button type="button" class="q-opt yes" onclick="togQ(this,'over5kMedical','over5kDetail')">Yes</button>
-          <button type="button" class="q-opt no active" onclick="togQ(this,'over5kMedical','over5kDetail')">No</button>
+          <button type="button" class="q-opt no" onclick="togQ(this,'over5kMedical','over5kDetail')">No</button>
         </div>
         <div class="q-detail" id="over5kDetail">
           <label>Who and details?</label>
-          <textarea id="over5kDetailText" placeholder="Please describe"></textarea>
+          <textarea id="over5kDetailText"></textarea>
         </div>
       </div>
-
-      <!-- Medications -->
       <div class="sec-label">Prescription medications — past 12 months</div>
       <div class="info-box">List all prescription medications used by anyone on this application.</div>
       <div id="medsContainer"></div>
       <div class="add-more" onclick="addMed()">+ Add a medication</div>
-
     </div>
     <div class="nav">
       <button class="btn-back" onclick="goBack(6)">← Back</button>
@@ -667,9 +402,7 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════
-       SCREEN 7 — REVIEW
-  ══════════════════════════════════════ -->
+  <!-- ══ SCREEN 7: REVIEW ══ -->
   <div class="screen" id="sc7">
     <div class="screen-body">
       <div class="sec-label">Review your answers</div>
@@ -682,230 +415,31 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════
-       SUCCESS SCREEN
-  ══════════════════════════════════════ -->
   <div class="success-screen" id="successScreen">
     <div class="check-circle">
-      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="20 6 9 17 4 12"/>
-      </svg>
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
     <div class="success-title">Submitted!</div>
   </div>
 
-  <!-- Submitting overlay -->
   <div class="submitting" id="submittingOverlay">
     <div class="spinner"></div>
     <div class="submitting-text">Submitting your form...</div>
   </div>
 
-</div><!-- .app -->
+</div>
 
 <script>
-// ══════════════════════════════════════
-// CONFIG — replace with your deployed Apps Script URL after deployment
-// ══════════════════════════════════════
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzSxJlyckOw38UZSPh0hOq4kw8FllJaXkqyWHDKt5WMqH7JLk42ui_OFMQQSmX8IGHLpA/exec";
-
-// ══════════════════════════════════════
-// STATE
-// ══════════════════════════════════════
 const TOTAL_SCREENS = 7;
 let currentScreen = 1;
-let childCount = 0;
+let childCount = 1;
 let medCount = 0;
-
-// Question answer state (for yes/no questions)
+let coverageTier = "Self";
 const qState = {};
 
-// ══════════════════════════════════════
-// SCREEN TITLES
-// ══════════════════════════════════════
-const screenTitles = [
-  "Your information",
-  "Dependents",
-  "Current coverage",
-  "Health questionnaire",
-  "Health conditions",
-  "Additional health questions",
-  "Review & submit"
-];
+const screenTitles = ["Your information","Dependents","Current coverage","Health questionnaire","Health conditions","Additional health questions","Review & submit"];
 
-// ══════════════════════════════════════
-// INIT
-// ══════════════════════════════════════
-document.addEventListener("DOMContentLoaded", () => {
-  buildProgressBar();
-  buildConditionsList();
-  addMed(); // start with one med row
-  updateHeader();
-});
-
-function buildProgressBar() {
-  const bar = document.getElementById("progressBar");
-  bar.innerHTML = "";
-  for (let i = 0; i < TOTAL_SCREENS; i++) {
-    const seg = document.createElement("div");
-    seg.className = "progress-seg" + (i === 0 ? " active" : "");
-    seg.id = "pseg" + i;
-    bar.appendChild(seg);
-  }
-}
-
-function updateHeader() {
-  document.getElementById("headerTitle").textContent =
-    currentScreen === 1 ? "Health Care Enrollment Questionnaire" : "Health Care Enrollment";
-  document.getElementById("headerSub").textContent = screenTitles[currentScreen - 1] || "";
-  document.getElementById("headerStep").textContent = currentScreen <= TOTAL_SCREENS ? currentScreen + " of " + TOTAL_SCREENS : "";
-  for (let i = 0; i < TOTAL_SCREENS; i++) {
-    const seg = document.getElementById("pseg" + i);
-    if (seg) seg.classList.toggle("active", i < currentScreen);
-  }
-}
-
-// ══════════════════════════════════════
-// NAVIGATION
-// ══════════════════════════════════════
-function goNext(from) {
-  if (from === 1 && !validateScreen1()) return;
-  if (from === 7) { submitForm(); return; }
-  if (from === TOTAL_SCREENS - 1) buildReview();
-  showScreen(from + 1);
-}
-
-function goBack(from) {
-  showScreen(from - 1);
-}
-
-function showScreen(n) {
-  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-  const sc = document.getElementById("sc" + n);
-  if (sc) {
-    sc.classList.add("active");
-    sc.querySelector(".screen-body").scrollTop = 0;
-  }
-  currentScreen = n;
-  updateHeader();
-  window.scrollTo(0, 0);
-}
-
-// ══════════════════════════════════════
-// VALIDATION
-// ══════════════════════════════════════
-function validateScreen1() {
-  const required = ["firstName", "lastName", "address", "city", "zip", "primaryPhone", "ssn", "dob"];
-  let valid = true;
-  required.forEach(id => {
-    const el = document.getElementById(id);
-    if (!el.value.trim()) {
-      el.classList.add("error");
-      valid = false;
-    } else {
-      el.classList.remove("error");
-    }
-  });
-  if (!valid) {
-    document.getElementById("sc1").querySelector(".screen-body").scrollTop = 0;
-    alert("Please fill in all required fields marked with *");
-  }
-  return valid;
-}
-
-// ══════════════════════════════════════
-// TOGGLE BUTTONS
-// ══════════════════════════════════════
-function toggleBtn(el, groupId) {
-  document.querySelectorAll("#" + groupId + " .toggle-btn").forEach(b => b.classList.remove("active"));
-  el.classList.add("active");
-}
-
-function getToggleVal(groupId) {
-  const active = document.querySelector("#" + groupId + " .toggle-btn.active");
-  return active ? active.dataset.val : "";
-}
-
-// ══════════════════════════════════════
-// RADIO CARDS
-// ══════════════════════════════════════
-function selectRadio(el, groupId) {
-  document.querySelectorAll("#" + groupId + " .radio-card").forEach(c => c.classList.remove("active"));
-  el.classList.add("active");
-}
-
-function getRadioVal(groupId) {
-  const active = document.querySelector("#" + groupId + " .radio-card.active");
-  return active ? active.dataset.val : "";
-}
-
-// ══════════════════════════════════════
-// YES/NO QUESTIONS
-// ══════════════════════════════════════
-function togQ(btn, stateKey, detailId) {
-  const opts = btn.closest(".q-opts");
-  opts.querySelectorAll(".q-opt").forEach(o => o.classList.remove("active"));
-  btn.classList.add("active");
-  const isYes = btn.classList.contains("yes");
-  qState[stateKey] = isYes ? "Yes" : "No";
-  const detail = document.getElementById(detailId);
-  if (detail) detail.classList.toggle("visible", isYes);
-}
-
-function getQVal(stateKey) {
-  return qState[stateKey] || "No";
-}
-
-// ══════════════════════════════════════
-// DEPENDENT CARDS
-// ══════════════════════════════════════
-function toggleDepCard(bodyId, toggleId) {
-  const body = document.getElementById(bodyId);
-  const toggle = document.getElementById(toggleId);
-  const isHidden = body.classList.contains("hidden");
-  body.classList.toggle("hidden", !isHidden);
-  toggle.textContent = isHidden ? "− collapse" : "+ expand";
-}
-
-// ══════════════════════════════════════
-// ADD CHILD
-// ══════════════════════════════════════
-function addChild() {
-  if (childCount >= 4) { alert("Maximum of 4 children allowed."); return; }
-  childCount++;
-  const n = childCount;
-  const container = document.getElementById("childrenContainer");
-  const card = document.createElement("div");
-  card.className = "dep-card";
-  card.id = "childCard" + n;
-  card.innerHTML = `
-    <div class="dep-card-header" onclick="toggleDepCard('childBody${n}','childToggle${n}')">
-      Child ${n}
-      <span class="add-link" id="childToggle${n}">− collapse</span>
-    </div>
-    <div class="dep-card-body" id="childBody${n}">
-      <div class="row2">
-        <div class="field"><label>First name</label><input type="text" id="child${n}First" placeholder="Name"></div>
-        <div class="field"><label>Last name</label><input type="text" id="child${n}Last" placeholder="Smith"></div>
-      </div>
-      <div class="field"><label>Date of birth</label><input type="date" id="child${n}DOB"></div>
-      <div class="sec-label">Gender</div>
-      <div class="toggle-group" id="child${n}GenderGroup">
-        <button type="button" class="toggle-btn active" data-val="Female" onclick="toggleBtn(this,'child${n}GenderGroup')">Female</button>
-        <button type="button" class="toggle-btn" data-val="Male" onclick="toggleBtn(this,'child${n}GenderGroup')">Male</button>
-      </div>
-      <div class="sec-label">Disabled?</div>
-      <div class="toggle-group" id="child${n}DisabledGroup">
-        <button type="button" class="toggle-btn active" data-val="No" onclick="toggleBtn(this,'child${n}DisabledGroup')">No</button>
-        <button type="button" class="toggle-btn" data-val="Yes" onclick="toggleBtn(this,'child${n}DisabledGroup')">Yes</button>
-      </div>
-    </div>`;
-  container.appendChild(card);
-  if (childCount >= 4) document.getElementById("addChildBtn").style.display = "none";
-}
-
-// ══════════════════════════════════════
-// CONDITIONS LIST (Screen 5)
-// ══════════════════════════════════════
 const CONDITIONS = [
   ["a","Autoimmune disease (lupus, HIV/AIDS, ARC)","condAutoimmune"],
   ["b","Arthritis (rheumatoid, psoriatic, ankylosing)","condArthritis"],
@@ -927,17 +461,250 @@ const CONDITIONS = [
   ["r","Respiratory disorder (asthma, COPD, tuberculosis)","condRespiratory"]
 ];
 
+// ── INIT ──
+document.addEventListener("DOMContentLoaded", () => {
+  buildProgressBar();
+  buildConditionsList();
+  addMed();
+  updateHeader();
+  updateSpouseHealthVisibility();
+});
+
+function buildProgressBar() {
+  const bar = document.getElementById("progressBar");
+  bar.innerHTML = "";
+  for (let i = 0; i < TOTAL_SCREENS; i++) {
+    const seg = document.createElement("div");
+    seg.className = "progress-seg" + (i === 0 ? " active" : "");
+    seg.id = "pseg" + i;
+    bar.appendChild(seg);
+  }
+}
+
+function updateHeader() {
+  document.getElementById("headerTitle").textContent = currentScreen === 1 ? "Health Care Enrollment Questionnaire" : "Health Care Enrollment";
+  document.getElementById("headerSub").textContent = screenTitles[currentScreen - 1] || "";
+  document.getElementById("headerStep").textContent = currentScreen <= TOTAL_SCREENS ? currentScreen + " of " + TOTAL_SCREENS : "";
+  for (let i = 0; i < TOTAL_SCREENS; i++) {
+    const seg = document.getElementById("pseg" + i);
+    if (seg) seg.classList.toggle("active", i < currentScreen);
+  }
+}
+
+// ── NAVIGATION ──
+function goNext(from) {
+  if (from === 1 && !validateScreen1()) return;
+  if (from === 2 && !validateScreen2()) return;
+  if (from === 4 && !validateScreen4()) return;
+  if (from === 5 && !validateConditions()) return;
+  if (from === 6 && !validateScreen6()) return;
+  if (from === 1) {
+    if (coverageTier === "Self") { showScreen(3); return; }
+    buildDependentsScreen();
+  }
+  if (from === TOTAL_SCREENS - 1) buildReview();
+  showScreen(from + 1);
+}
+
+function goBack(from) {
+  if (from === 3 && coverageTier === "Self") { showScreen(1); return; }
+  showScreen(from - 1);
+}
+
+function showScreen(n) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  const sc = document.getElementById("sc" + n);
+  if (sc) { sc.classList.add("active"); sc.querySelector(".screen-body").scrollTop = 0; }
+  currentScreen = n;
+  updateHeader();
+  window.scrollTo(0, 0);
+}
+
+// ── TIER SELECTION ──
+function selectTier(el) {
+  document.querySelectorAll("#tierGroup .tier-card").forEach(c => c.classList.remove("active"));
+  el.classList.add("active");
+  coverageTier = el.dataset.val;
+  updateSpouseHealthVisibility();
+}
+
+function updateSpouseHealthVisibility() {
+  const hasSpouse = coverageTier === "Self + Spouse" || coverageTier === "Self + Spouse + Child(ren)";
+  const sec = document.getElementById("spouseHealthSection");
+  if (sec) sec.style.display = hasSpouse ? "contents" : "none";
+}
+
+// ── BUILD DEPENDENTS SCREEN ──
+function buildDependentsScreen() {
+  const body = document.getElementById("sc2Body");
+  body.innerHTML = "";
+  childCount = 1;
+
+  const hasSpouse = coverageTier === "Self + Spouse" || coverageTier === "Self + Spouse + Child(ren)";
+  const hasChildren = coverageTier === "Self + Child(ren)" || coverageTier === "Self + Spouse + Child(ren)";
+
+  if (hasSpouse) {
+    const spouseSection = document.createElement("div");
+    spouseSection.style.cssText = "display:flex;flex-direction:column;gap:14px";
+    spouseSection.innerHTML = `
+      <div class="sec-label">Spouse information</div>
+      <div class="dep-card">
+        <div class="dep-card-header" onclick="toggleDepCard('spouseBody','spouseToggle')">
+          Spouse <span class="add-link" id="spouseToggle">− collapse</span>
+        </div>
+        <div class="dep-card-body" id="spouseBody">
+          <div class="row2">
+            <div class="field"><label>First name <span class="req">*</span></label><input type="text" id="spouseFirstName" placeholder="Jane"></div>
+            <div class="field"><label>Last name <span class="req">*</span></label><input type="text" id="spouseLastName" placeholder="Smith"></div>
+          </div>
+          <div class="field" style="max-width:100px"><label>Middle initial</label><input type="text" id="spouseMiddleInitial" maxlength="1" placeholder="B"></div>
+          <div class="field">
+            <label>Social Security Number <span class="req">*</span></label>
+            <input type="password" id="spouseSSN" inputmode="numeric" maxlength="11" placeholder="•••-••-••••">
+            <span class="hint">Required by the health plan</span>
+          </div>
+          <div class="field"><label>Date of birth <span class="req">*</span></label><input type="date" id="spouseDOB"></div>
+          <div class="sec-label">Gender <span class="req">*</span></div>
+          <div class="toggle-group" id="spouseGenderGroup">
+            <button type="button" class="toggle-btn" data-val="Female" onclick="toggleBtn(this,'spouseGenderGroup')">Female</button>
+            <button type="button" class="toggle-btn" data-val="Male" onclick="toggleBtn(this,'spouseGenderGroup')">Male</button>
+          </div>
+          <div class="sec-label">Disabled? <span class="req">*</span></div>
+          <div class="toggle-group" id="spouseDisabledGroup">
+            <button type="button" class="toggle-btn" data-val="No" onclick="toggleBtn(this,'spouseDisabledGroup')">No</button>
+            <button type="button" class="toggle-btn" data-val="Yes" onclick="toggleBtn(this,'spouseDisabledGroup')">Yes</button>
+          </div>
+          <div class="field"><label>Primary care physician — last name</label><input type="text" id="spousePCPLast" placeholder="If HMO plan (optional)"></div>
+          <div class="field"><label>Primary care physician — first name</label><input type="text" id="spousePCPFirst" placeholder="If HMO plan (optional)"></div>
+        </div>
+      </div>`;
+    body.appendChild(spouseSection);
+  }
+
+  if (hasSpouse && hasChildren) {
+    const div = document.createElement("div");
+    div.className = "divider";
+    body.appendChild(div);
+  }
+
+  if (hasChildren) {
+    const childSection = document.createElement("div");
+    childSection.style.cssText = "display:flex;flex-direction:column;gap:14px";
+    childSection.innerHTML = `
+      <div class="sec-label">Children under 25</div>
+      <div class="count-box">
+        <div class="count-label-text">How many children under 25 are you enrolling? <span class="req">*</span></div>
+        <div class="count-row">
+          <button type="button" class="count-btn" onclick="changeChildCount(-1)">−</button>
+          <div class="count-val" id="childCountDisplay">1</div>
+          <button type="button" class="count-btn" onclick="changeChildCount(1)">+</button>
+          <div class="count-desc" id="childCountDesc">child</div>
+        </div>
+      </div>
+      <div class="child-cards" id="childCardsContainer"></div>`;
+    body.appendChild(childSection);
+    buildChildCards();
+  }
+}
+
+// ── CHILD COUNT CONTROLS ──
+function changeChildCount(delta) {
+  childCount = Math.max(1, Math.min(4, childCount + delta));
+  const display = document.getElementById("childCountDisplay");
+  const desc = document.getElementById("childCountDesc");
+  if (display) display.textContent = childCount;
+  if (desc) desc.textContent = childCount === 1 ? "child" : "children";
+  buildChildCards();
+}
+
+function buildChildCards() {
+  const container = document.getElementById("childCardsContainer");
+  if (!container) return;
+  container.innerHTML = "";
+  for (let n = 1; n <= childCount; n++) {
+    const card = document.createElement("div");
+    card.className = "dep-card";
+    card.id = "childCard" + n;
+    card.innerHTML = `
+      <div class="dep-card-header" onclick="toggleDepCard('childBody${n}','childToggle${n}')">
+        Child ${n} <span class="add-link" id="childToggle${n}">− collapse</span>
+      </div>
+      <div class="dep-card-body" id="childBody${n}">
+        <div class="row2">
+          <div class="field"><label>First name <span class="req">*</span></label><input type="text" id="child${n}First" placeholder="Name"></div>
+          <div class="field"><label>Last name <span class="req">*</span></label><input type="text" id="child${n}Last" placeholder="Smith"></div>
+        </div>
+        <div class="field"><label>Date of birth <span class="req">*</span></label><input type="date" id="child${n}DOB"></div>
+        <div class="sec-label">Gender <span class="req">*</span></div>
+        <div class="toggle-group" id="child${n}GenderGroup">
+          <button type="button" class="toggle-btn" data-val="Female" onclick="toggleBtn(this,'child${n}GenderGroup')">Female</button>
+          <button type="button" class="toggle-btn" data-val="Male" onclick="toggleBtn(this,'child${n}GenderGroup')">Male</button>
+        </div>
+        <div class="sec-label">Disabled? <span class="req">*</span></div>
+        <div class="toggle-group" id="child${n}DisabledGroup">
+          <button type="button" class="toggle-btn" data-val="No" onclick="toggleBtn(this,'child${n}DisabledGroup')">No</button>
+          <button type="button" class="toggle-btn" data-val="Yes" onclick="toggleBtn(this,'child${n}DisabledGroup')">Yes</button>
+        </div>
+      </div>`;
+    container.appendChild(card);
+  }
+}
+
+// ── TOGGLE / RADIO ──
+function toggleDepCard(bodyId, toggleId) {
+  const body = document.getElementById(bodyId);
+  const toggle = document.getElementById(toggleId);
+  const isHidden = body.classList.contains("hidden");
+  body.classList.toggle("hidden", !isHidden);
+  toggle.textContent = isHidden ? "− collapse" : "+ expand";
+}
+
+function toggleBtn(el, groupId) {
+  document.querySelectorAll("#" + groupId + " .toggle-btn").forEach(b => b.classList.remove("active"));
+  el.classList.add("active");
+}
+
+function getToggleVal(groupId) {
+  const active = document.querySelector("#" + groupId + " .toggle-btn.active");
+  return active ? active.dataset.val : "";
+}
+
+function selectRadio(el, groupId) {
+  document.querySelectorAll("#" + groupId + " .radio-card").forEach(c => c.classList.remove("active"));
+  el.classList.add("active");
+}
+
+function getRadioVal(groupId) {
+  const active = document.querySelector("#" + groupId + " .radio-card.active");
+  return active ? active.dataset.val : "";
+}
+
+// ── YES/NO QUESTIONS ──
+function togQ(btn, stateKey, detailId) {
+  btn.closest(".q-opts").querySelectorAll(".q-opt").forEach(o => o.classList.remove("active"));
+  btn.classList.add("active");
+  qState[stateKey] = btn.classList.contains("yes") ? "Yes" : "No";
+  const detail = document.getElementById(detailId);
+  if (detail) detail.classList.toggle("visible", btn.classList.contains("yes"));
+  const row = document.getElementById("qrow_" + stateKey);
+  if (row) row.classList.remove("required-unanswered");
+}
+
+function getQVal(stateKey) { return qState[stateKey] || ""; }
+
+// ── CONDITIONS LIST ──
 function buildConditionsList() {
   const el = document.getElementById("conditionsList");
   el.style.cssText = "display:flex;flex-direction:column;gap:10px";
   CONDITIONS.forEach(([key, label, stateKey]) => {
     const div = document.createElement("div");
     div.className = "q-row";
+    div.id = "qrow_" + stateKey;
     div.innerHTML = `
       <div class="q-text">${label}</div>
       <div class="q-opts">
         <button type="button" class="q-opt yes" onclick="togQ(this,'${stateKey}','cdet${key}')">Yes</button>
-        <button type="button" class="q-opt no active" onclick="togQ(this,'${stateKey}','cdet${key}')">No</button>
+        <button type="button" class="q-opt no" onclick="togQ(this,'${stateKey}','cdet${key}')">No</button>
       </div>
       <div class="q-detail" id="cdet${key}">
         <label>Who? Brief description of diagnosis/treatment:</label>
@@ -947,9 +714,7 @@ function buildConditionsList() {
   });
 }
 
-// ══════════════════════════════════════
-// MEDICATIONS
-// ══════════════════════════════════════
+// ── MEDICATIONS ──
 function addMed() {
   medCount++;
   const n = medCount;
@@ -969,18 +734,14 @@ function addMed() {
   container.appendChild(row);
 }
 
-function removeMed(n) {
-  const row = document.getElementById("medRow" + n);
-  if (row) row.remove();
-}
+function removeMed(n) { const row = document.getElementById("medRow" + n); if (row) row.remove(); }
 
 function getMedicationsText() {
   const lines = [];
   for (let i = 1; i <= medCount; i++) {
     const person = document.getElementById("medPerson" + i);
     const name = document.getElementById("medName" + i);
-    if (!person || !name) continue;
-    if (!person.value.trim() && !name.value.trim()) continue;
+    if (!person || !name || (!person.value.trim() && !name.value.trim())) continue;
     const dose = document.getElementById("medDose" + i)?.value || "";
     const start = document.getElementById("medStart" + i)?.value || "";
     const end = document.getElementById("medEnd" + i)?.value || "";
@@ -989,35 +750,130 @@ function getMedicationsText() {
   return lines.length > 0 ? lines.join("\n") : "None";
 }
 
-// ══════════════════════════════════════
-// COLLECT ALL DATA
-// ══════════════════════════════════════
+// ── VALIDATION ──
+function validateScreen1() {
+  const required = ["firstName","lastName","address","city","zip","primaryPhone","ssn","dob"];
+  let valid = true;
+  required.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && !el.value.trim()) { el.classList.add("error"); valid = false; }
+    else if (el) el.classList.remove("error");
+  });
+  if (!getToggleVal("genderGroup")) valid = false;
+  if (!getToggleVal("disabledGroup")) valid = false;
+  if (!valid) {
+    document.getElementById("sc1").querySelector(".screen-body").scrollTop = 0;
+    alert("Please fill in all required fields marked with *");
+  }
+  return valid;
+}
+
+function validateScreen2() {
+  let valid = true;
+  const hasSpouse = coverageTier === "Self + Spouse" || coverageTier === "Self + Spouse + Child(ren)";
+  const hasChildren = coverageTier === "Self + Child(ren)" || coverageTier === "Self + Spouse + Child(ren)";
+
+  if (hasSpouse) {
+    ["spouseFirstName","spouseLastName","spouseSSN","spouseDOB"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && !el.value.trim()) { el.classList.add("error"); valid = false; }
+      else if (el) el.classList.remove("error");
+    });
+    if (!getToggleVal("spouseGenderGroup")) valid = false;
+    if (!getToggleVal("spouseDisabledGroup")) valid = false;
+  }
+
+  if (hasChildren) {
+    for (let n = 1; n <= childCount; n++) {
+      ["child" + n + "First", "child" + n + "Last", "child" + n + "DOB"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && !el.value.trim()) { el.classList.add("error"); valid = false; }
+        else if (el) el.classList.remove("error");
+      });
+      if (!getToggleVal("child" + n + "GenderGroup")) valid = false;
+      if (!getToggleVal("child" + n + "DisabledGroup")) valid = false;
+    }
+  }
+
+  if (!valid) alert("Please fill in all required fields for each dependent.");
+  return valid;
+}
+
+function validateScreen4() {
+  let valid = true;
+  ["employeeHeight","employeeWeight"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && !el.value.trim()) { el.classList.add("error"); valid = false; }
+    else if (el) el.classList.remove("error");
+  });
+  if (!getToggleVal("employeeTobaccoGroup")) valid = false;
+  const hasSpouse = coverageTier === "Self + Spouse" || coverageTier === "Self + Spouse + Child(ren)";
+  if (hasSpouse) {
+    ["spouseHeight","spouseWeight"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && !el.value.trim()) { el.classList.add("error"); valid = false; }
+      else if (el) el.classList.remove("error");
+    });
+    if (!getToggleVal("spouseTobaccoGroup")) valid = false;
+  }
+  ["pendingSurgery","pregnancy"].forEach(key => {
+    if (!getQVal(key)) {
+      const row = document.getElementById("qrow_" + key);
+      if (row) row.classList.add("required-unanswered");
+      valid = false;
+    }
+  });
+  if (!valid) alert("Please answer all required fields on this page.");
+  return valid;
+}
+
+function validateConditions() {
+  let valid = true;
+  CONDITIONS.forEach(([,,stateKey]) => {
+    if (!getQVal(stateKey)) {
+      const row = document.getElementById("qrow_" + stateKey);
+      if (row) row.classList.add("required-unanswered");
+      valid = false;
+    }
+  });
+  if (!valid) alert("Please answer all health condition questions before continuing.");
+  return valid;
+}
+
+function validateScreen6() {
+  const keys = ["diabetes","drugAlcohol","mentalHealth","upcomingSurgery","disabilityBenefits","otherConditions","over5kMedical"];
+  let valid = true;
+  keys.forEach(key => {
+    if (!getQVal(key)) {
+      const row = document.getElementById("qrow_" + key);
+      if (row) row.classList.add("required-unanswered");
+      valid = false;
+    }
+  });
+  if (!valid) alert("Please answer all health questions before continuing.");
+  return valid;
+}
+
+// ── COLLECT DATA ──
 function collectData() {
   const v = id => (document.getElementById(id)?.value || "").trim();
   const data = {
-    // Employee
+    coverageTier,
     firstName: v("firstName"), lastName: v("lastName"), middleInitial: v("middleInitial"),
     address: v("address"), city: v("city"), state: v("state"), zip: v("zip"),
     primaryPhone: v("primaryPhone"), secondaryPhone: v("secondaryPhone"), email: v("email"),
     ssn: v("ssn"), dob: v("dob"),
     gender: getToggleVal("genderGroup"), disabled: getToggleVal("disabledGroup"),
-    // Spouse
     spouseFirstName: v("spouseFirstName"), spouseLastName: v("spouseLastName"),
     spouseMiddleInitial: v("spouseMiddleInitial"), spouseSSN: v("spouseSSN"),
-    spouseDOB: v("spouseDOB"),
-    spouseGender: getToggleVal("spouseGenderGroup"),
+    spouseDOB: v("spouseDOB"), spouseGender: getToggleVal("spouseGenderGroup"),
     spouseDisabled: getToggleVal("spouseDisabledGroup"),
     spousePCPLast: v("spousePCPLast"), spousePCPFirst: v("spousePCPFirst"),
-    // Children
-    child1First: v("child1First"), child1Last: v("child1Last"), child1DOB: v("child1DOB"),
-    child1Gender: getToggleVal("child1GenderGroup"), child1Disabled: getToggleVal("child1DisabledGroup"),
-    child2First: v("child2First"), child2Last: v("child2Last"), child2DOB: v("child2DOB"),
-    child2Gender: getToggleVal("child2GenderGroup"), child2Disabled: getToggleVal("child2DisabledGroup"),
-    child3First: v("child3First"), child3Last: v("child3Last"), child3DOB: v("child3DOB"),
-    child3Gender: getToggleVal("child3GenderGroup"), child3Disabled: getToggleVal("child3DisabledGroup"),
-    child4First: v("child4First"), child4Last: v("child4Last"), child4DOB: v("child4DOB"),
-    child4Gender: getToggleVal("child4GenderGroup"), child4Disabled: getToggleVal("child4DisabledGroup"),
-    // Coverage
+    numberOfChildren: (coverageTier.includes("Child") ? childCount : 0).toString(),
+    child1First: v("child1First"), child1Last: v("child1Last"), child1DOB: v("child1DOB"), child1Gender: getToggleVal("child1GenderGroup"), child1Disabled: getToggleVal("child1DisabledGroup"),
+    child2First: v("child2First"), child2Last: v("child2Last"), child2DOB: v("child2DOB"), child2Gender: getToggleVal("child2GenderGroup"), child2Disabled: getToggleVal("child2DisabledGroup"),
+    child3First: v("child3First"), child3Last: v("child3Last"), child3DOB: v("child3DOB"), child3Gender: getToggleVal("child3GenderGroup"), child3Disabled: getToggleVal("child3DisabledGroup"),
+    child4First: v("child4First"), child4Last: v("child4Last"), child4DOB: v("child4DOB"), child4Gender: getToggleVal("child4GenderGroup"), child4Disabled: getToggleVal("child4DisabledGroup"),
     coverageStatus: getRadioVal("coverageGroup"),
     insuredName: v("insuredName"), policyNumber: v("policyNumber"),
     insuranceCompany: v("insuranceCompany"), coverageEmployer: v("coverageEmployer"),
@@ -1025,14 +881,12 @@ function collectData() {
     medicarePerson: v("medicarePerson"), hicNumber: v("hicNumber"),
     medicarePartA: v("medicarePartA"), medicarePartB: v("medicarePartB"),
     medicareEligibility: v("medicareEligibility"),
-    // Health basics
     employeeHeight: v("employeeHeight"), employeeWeight: v("employeeWeight"),
     employeeTobacco: getToggleVal("employeeTobaccoGroup"),
     spouseHeight: v("spouseHeight"), spouseWeight: v("spouseWeight"),
     spouseTobacco: getToggleVal("spouseTobaccoGroup"),
     pendingSurgery: getQVal("pendingSurgery"), pendingSurgeryDetail: v("pendingSurgeryDetailText"),
     pregnancy: getQVal("pregnancy"), pregnancyDetail: v("pregnancyDetailText"),
-    // Conditions
     condAutoimmune: getQVal("condAutoimmune"), condAutoimmuneDetail: v("condAutoimmuneDetail"),
     condArthritis: getQVal("condArthritis"), condArthritisDetail: v("condArthritisDetail"),
     condBack: getQVal("condBack"), condBackDetail: v("condBackDetail"),
@@ -1051,15 +905,12 @@ function collectData() {
     condPancreatic: getQVal("condPancreatic"), condPancreaticDetail: v("condPancreaticDetail"),
     condPituitary: getQVal("condPituitary"), condPituitaryDetail: v("condPituitaryDetail"),
     condRespiratory: getQVal("condRespiratory"), condRespiratoryDetail: v("condRespiratoryDetail"),
-    // Additional health
-    diabetes: getQVal("diabetes"), diabetesWho: v("diabetesWho"),
-    diabetesType: v("diabetesType"), diabetesTreatment: v("diabetesTreatment"),
-    diabetesDiagnosed: v("diabetesDiagnosed"),
+    diabetes: getQVal("diabetes"), diabetesWho: v("diabetesWho"), diabetesType: v("diabetesType"),
+    diabetesTreatment: v("diabetesTreatment"), diabetesDiagnosed: v("diabetesDiagnosed"),
     drugAlcohol: getQVal("drugAlcohol"), drugAlcoholWho: v("drugAlcoholWho"),
     drugAlcoholType: v("drugAlcoholType"), rehabFacility: getToggleVal("rehabGroup"),
     mentalHealth: getQVal("mentalHealth"), mentalHealthWho: v("mentalHealthWho"),
-    mentalHealthDiagnosis: v("mentalHealthWho"),
-    mentalHealthTreatment: v("mentalHealthTreatment"),
+    mentalHealthDiagnosis: v("mentalHealthWho"), mentalHealthTreatment: v("mentalHealthTreatment"),
     mentalHealthOngoing: getToggleVal("mentalOngoingGroup"),
     upcomingSurgery: getQVal("upcomingSurgery"), upcomingSurgeryDetail: v("upcomingSurgeryDetailText"),
     disabilityBenefits: getQVal("disabilityBenefits"), disabilityWho: v("disabilityWho"),
@@ -1071,24 +922,25 @@ function collectData() {
   return data;
 }
 
-// ══════════════════════════════════════
-// REVIEW SCREEN
-// ══════════════════════════════════════
+// ── REVIEW ──
 function buildReview() {
   const d = collectData();
   const container = document.getElementById("reviewContent");
+  const row = (label, val) => val ? `<div class="review-row"><span class="review-label">${label}</span><span class="review-value">${val}</span></div>` : "";
+  const flagged = CONDITIONS.filter(([,,sk]) => getQVal(sk) === "Yes").map(([,label]) => label);
 
-  function row(label, val) {
-    if (!val) return "";
-    return `<div class="review-row"><span class="review-label">${label}</span><span class="review-value">${val}</span></div>`;
+  let childRows = "";
+  const numChildren = parseInt(d.numberOfChildren) || 0;
+  for (let n = 1; n <= numChildren; n++) {
+    const first = d["child" + n + "First"];
+    const last = d["child" + n + "Last"];
+    const dob = d["child" + n + "DOB"];
+    if (first) childRows += row("Child " + n, [first, last].join(" ") + (dob ? " — DOB: " + dob : ""));
   }
-
-  const flagged = CONDITIONS
-    .filter(([,,sk]) => getQVal(sk) === "Yes")
-    .map(([,,, label]) => label);
 
   container.innerHTML = `
     <div class="review-section-title">Your information</div>
+    ${row("Coverage", d.coverageTier)}
     ${row("Name", [d.firstName, d.middleInitial, d.lastName].filter(Boolean).join(" "))}
     ${row("DOB", d.dob)}
     ${row("SSN", "•••-••-" + (d.ssn.slice(-4) || "••••"))}
@@ -1097,19 +949,14 @@ function buildReview() {
     ${row("Email", d.email)}
     ${row("Gender", d.gender)}
     ${row("Disabled", d.disabled)}
-
     <div class="review-section-title">Dependents</div>
-    ${row("Spouse", [d.spouseFirstName, d.spouseLastName].filter(Boolean).join(" ") || "None")}
-    ${row("Child 1", d.child1First ? [d.child1First, d.child1Last].join(" ") + (d.child1DOB ? " — DOB: " + d.child1DOB : "") : "")}
-    ${row("Child 2", d.child2First ? [d.child2First, d.child2Last].join(" ") : "")}
-    ${row("Child 3", d.child3First ? [d.child3First, d.child3Last].join(" ") : "")}
-    ${row("Child 4", d.child4First ? [d.child4First, d.child4Last].join(" ") : "")}
-
+    ${row("Spouse", [d.spouseFirstName, d.spouseLastName].filter(Boolean).join(" ") || (coverageTier.includes("Spouse") ? "—" : ""))}
+    ${row("Children enrolled", d.numberOfChildren !== "0" ? d.numberOfChildren : "")}
+    ${childRows}
     <div class="review-section-title">Current coverage</div>
     ${row("Status", d.coverageStatus)}
     ${row("Insurance co.", d.insuranceCompany)}
     ${row("Policy number", d.policyNumber)}
-
     <div class="review-section-title">Health questionnaire</div>
     ${row("Tobacco (employee)", d.employeeTobacco)}
     ${row("Tobacco (spouse)", d.spouseTobacco)}
@@ -1126,31 +973,26 @@ function buildReview() {
   `;
 }
 
-// ══════════════════════════════════════
-// SUBMIT
-// ══════════════════════════════════════
+// ── SUBMIT ──
 function submitForm() {
   const data = collectData();
   document.getElementById("submittingOverlay").classList.add("active");
   document.getElementById("submitBtn").disabled = true;
-
   fetch(SCRIPT_URL, {
-    method: "POST",
-    mode: "no-cors",
+    method: "POST", mode: "no-cors",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)
   })
   .then(() => {
     document.getElementById("submittingOverlay").classList.remove("active");
     document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-    document.getElementById("header") && (document.getElementById("header").style.display = "none");
     document.querySelector(".header").style.display = "none";
     document.getElementById("successScreen").classList.add("active");
   })
   .catch(() => {
     document.getElementById("submittingOverlay").classList.remove("active");
     document.getElementById("submitBtn").disabled = false;
-    alert("There was a problem submitting your form. Please try again or contact HR.");
+    alert("There was a problem submitting. Please try again or contact HR.");
   });
 }
 </script>
